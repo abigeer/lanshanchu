@@ -14,7 +14,7 @@ MVC是后端分层开发的概念；
 
 MVVM是前端视图层的概念，主要关注视图层分离，即：MVVM把前端的试图层，分为三个部分，M：Model、V：View、VM：ViewModel。
 
-![MVC和MVVM关系图](.\images\MVC_and_MVVM.png)
+![MVC和MVVM关系图](./images/MVC_and_MVVM.png)
 
 ## 3、VUE基础
 
