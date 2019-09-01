@@ -1239,3 +1239,239 @@ overflow可选值：
 3. 浮动的元素不会盖住文字，文字会自动环绕在浮动元素周围（常用浮动过来设置文字环绕图片的效果），如p标签上有一个块元素浮动，p标签上移，但是浮动元素不会挡住文字。
 4. 在文档流中，子元素的宽度默认占父元素的全部，当元素设置浮动后，会完全脱离文档流，块元素脱离文档流以后，高度和宽度都被内容撑开。
 5. 开启span的浮动，内联元素脱离文档流以后会变成块元素可以设置宽高。
+
+### 3、清除浮动
+
+```html
+<head>
+    <style type="text/css">
+    	.box1 {
+    		width: 100px;
+    		height: 100px;
+    		background-color: yellow;
+    		float: left;
+    	}
+    	.box2 {
+    		width: 200px;
+    		height: 200px;
+    		background-color: yellowgreen;
+            /*清除其他元素浮动对本元素的影响*/
+            /*clear: left;*/
+            float: right;
+    	}
+        .box3 {
+            width: 300px;
+            height: 300px;
+            background-color: skyblue;
+            clear: both
+        }
+    </style>
+</head>
+<body>
+	<div class="box1"></div>
+    <div class="box2"></div>
+    <div class="box3"></div>
+</body>
+```
+
+由于受到box1浮动的影响，box2整体向上移动了100px，
+
+我们有时希望清除掉其他元素浮动对当前元素产生的影响，这是可以用clear属性来完成该功能；
+
+> clear可以用来清除其他浮动元素对挡墙元素的影响，可选值：
+>
+> - none：默认值，不清除浮动影响；
+> - left：清除左侧浮动元素对当前元素的影响；
+> - right：清除右侧浮动元素对当前元素的影响；
+> - both：清除两侧浮动元素对当前元素的影响，清除对当前元素影响最大的那个元素的浮动。
+
+
+
+## 6、解决高度塌陷问题
+
+**高度塌陷解释**：在文档流中，父元素的高度默认是被子元素撑开的，即子元素多高父元素就多高。当为子元素设置浮动后，子元素完全脱离文档流，此时会导致子元素无法撑起父元素的高度，导致父元素高度塌陷。由于父元素高度塌陷了，则父元素下的所有元素都会向上移动，导致布局混乱。
+
+### 方式一
+
+可以将父元素的高度写死，以避免高度塌陷的问题，但是这样父元素的高度就无法自动适应子元素的高度，所以这种方案不推荐使用。
+
+### 方式二
+
+> 根据W3C的标准，在页面中元素都有一个隐含的属性角坐Block Formatting Context,简称**BFC**，该属性可以设置打开或者关闭，默认是关闭的。
+>
+> 当开启元素的BFC后，元素将会具有如下特性：
+>
+> 1. 父元素的垂直外边距不会和子元素重叠；
+> 2. 开启BFC的元素不会被浮动元素覆盖；
+> 3. 开启BFC的元素可以包含浮动的子元素。
+>
+> 如何开启元素的BFC：
+>
+> 1. 设置元素浮动
+>    - 使用这种方式开启，虽然可以撑开父元素，待会导致父元素的宽度丢失，而且使用这种方式也会导致下边的元素上移，不能解决问题。
+> 2. 设置元素绝对定位；
+> 3. 设置元素为inline-block
+>    - 可以解决问题，但是会导致宽度丢失，不推荐使用。
+> 4. 将元素的overflow设置为一个非visible的值。
+>    - 推荐方式：将**overflow设置为hidden是副作用最小的开**启BFC的方式。
+>
+> 在IE6及以下的浏览器中并不支持BFC，所以使用这种方式不能兼容IE6。在IE6中虽然没有BFC，但是具有另外一个隐含的属性叫做**hasLayout**，该属性的作用和BFC类似，所以在IE6中可以通过打开hasLayout来解决问题，开启方式很多，尽量选择使用一种副作用最小的：**直接将元素的zoom设置为1即可**。
+>
+> - zoom表示放大的意思，后面跟着一个数值，写几就表示放大几倍。
+> - zoom: 1 表示不放大元素，但是通过该样式可以开启hasLayout；
+> - zoom这个样式在IE中支持，其他浏览器不支持。
+>
+> ` overflow: hidden;
+>
+> zoom: 1; `
+
+### 方式三
+
+> 可以直接在高度塌陷的父元素的最后，添加一个空白的div，
+>
+> 由于这个div并没有浮动，所以他是可以撑开父元素的高度的，
+>
+> 然后对其设置clear属性清除浮动影响，基本没有副作用。
+>
+> 虽然可以解决问题，但是会在页面中添加多余结构。
+
+```html
+<head>
+    <style type="text/css">
+        .box1 {
+            border: 1px solid red;
+        }
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            float: left;
+        }
+        .clear {
+            clear: both
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">
+        <div class="box2"></div>
+        <div class="clear"></div>
+    </div>
+</body>
+```
+
+### 方式四
+
+通过after伪类选中父元素box的后边，并添加一个空元素块对齐设置clear属性，这样基本没有副作用，最推荐使用。
+
+```html
+<head>
+    <style type="text/css">
+        .box1 {
+            border: 1px solid red;
+        }
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            float: left;
+        }
+        .clearfix:after {
+            /*添加一个内容*/
+            content: "";
+            /*转换为一个块元素*/
+            display: block;
+            /*清除两侧浮动*/
+            clear:both
+        }
+        .clearfix {
+            /*IE6不支持使用zoom开启haslayout*/
+            zoom: 1
+        }
+    </style>
+</head>
+<body>
+    <div class="box1 clearfix">
+    	<div class="box2"></div>
+    </div>
+</body>
+```
+
+
+
+
+
+## 7、导航条案例
+
+```html
+	<head>
+		<meta charset="utf-8">
+		<title>导航</title>
+		<style type="text/css">	
+			/* 清空默认样式 */
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			/* 设置ul */
+			.nav {
+				/* 去除符号样式 */
+				list-style: none;
+				background-color: #6495ED;
+				/* 在IE6中设置宽度,默认会把hasLayout属性打开 */
+				width: 1000px;
+				/* 使用margin设置居中 */
+				margin: 50px auto;
+				
+				/* 解决高度塌陷 */
+				overflow: hidden;
+				zoom: 1;
+			}
+			
+			.nav li {
+				float: left;
+				width: 10%;
+			}
+			
+			.nav a{
+				/* 将a设置为块元素 */
+				display: block;
+				/* 为a指定一个宽度 */
+				width: 100%;
+				/* 设置文字居中 */
+				text-align: center;
+				/* 去掉a中文字修饰 */
+				text-decoration: none;
+				/* 设置上下边距 */
+				padding: 5px 0;
+				/* 字体白色加粗 */
+				color: white;
+				font-weight: bold;
+			}
+			
+			/* 设置伪类 */
+			.nav a:hover {
+				background-color: #c00;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<ul class="nav">
+			<li><a href="#">首页</a></li>
+			<li><a href="#">搞笑</a></li>
+			<li><a href="#">人文</a></li>
+			<li><a href="#">科普</a></li>
+			<li><a href="#">动漫</a></li>
+			<li><a href="#">首页</a></li>
+			<li><a href="#">搞笑</a></li>
+			<li><a href="#">人文</a></li>
+			<li><a href="#">科普</a></li>
+			<li><a href="#">动漫</a></li>
+		</ul>
+	</body>
+```
+
+
+
