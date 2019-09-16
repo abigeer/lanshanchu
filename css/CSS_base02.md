@@ -289,13 +289,13 @@ alpha(opacity=透明度)
   - 可以使用top right left bottom center中的两个值搭配；
   - top left：表示左上，bottom right：表示右下
   - 如果只给出一个值，则第二个值默认是center。
-  - 也可以指定便宜像素，第一个值为水平第二个值为垂直，可正可负。background-position: -80px -40px; 向左上移动。
+  - 也可以指定偏移像素，第一个值为水平第二个值为垂直，可正可负。background-position: -80px -40px; 向左上移动。
   
 - background-attachment用来设置背景图片是否随页面一起滚动，可选值：
   - scroll，默认值，背景图片随着窗口滚动
   - fixed，背景图片会固定在某一位置，不随页面滚动
   - 不随窗口滚动的图片，我们一般都是设置给body，而不设置给其他元素
-  - 当背景图片的background-attachment设置为fixed时，背景土坯那的定位永远相对于浏览器窗口。
+  - 当背景图片的background-attachment设置为fixed时，背景图片那的定位永远相对于浏览器窗口。
   
   ```html
   <head>
