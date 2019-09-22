@@ -78,7 +78,7 @@ MVVM是前端视图层的概念，主要关注视图层分离，即：MVVM把前
    </head>
    <body>
        <div id="app">
-           <p v-cloal>+++++{{msg}}-----</p>
+           <p v-cloak>+++++{{msg}}-----</p>
        </div>
        
        <script>
@@ -619,7 +619,7 @@ MVVM是前端视图层的概念，主要关注视图层分离，即：MVVM把前
 
 `<h1 :style="{color: 'red', 'font-size': '40px'}">这是一个善良的H1</h1>`
 
-2. 将样式对象定义到data中，并直接应用到`.style`中；
+2. 将样式对象定义到data中，并直接应用到`:style`中；
 
 3. 在`:style`中通过数组，应用多个data上的样式；
 
@@ -648,7 +648,7 @@ MVVM是前端视图层的概念，主要关注视图层分离，即：MVVM把前
 
 ## 7、过滤器
 
-> 概念：Vue.js允许你自定义过滤器，**可被用作一些常见的文本格式化**。过滤器可以用在连个地方：**mustache插值和v-bind表达式**。过滤器应该被添加在js表达式的尾部，由”管道“符“|”指示。
+> 概念：Vue.js允许你自定义过滤器，**可被用作一些常见的文本格式化**。过滤器可以用在两个地方：**mustache插值和v-bind表达式**。过滤器应该被添加在js表达式的尾部，由”管道“符“|”指示。
 
 
 
@@ -725,7 +725,7 @@ MVVM是前端视图层的概念，主要关注视图层分离，即：MVVM把前
 
 ## 8、按键修饰符
 
-> 在监听键盘事件市，我们经常需要检查详细的按键。vue允许为v-on在监听键盘事件时添加按键修饰符。
+> 在监听键盘事件时，我们经常需要检查详细的按键。vue允许为v-on在监听键盘事件时添加按键修饰符。
 
 ```html
 <!--只有‘key'在'Enter'时调用‘vm.submit()’-->
@@ -795,7 +795,7 @@ vm中接收一个directives对象。
                 //样式只要通过指令绑定给了元素，不管这个元素有没有被插入到页面中去，这个元素肯定有了一个内联样式。
                 //将来元素肯定会显示到页面中，这时候，浏览器的渲染引擎必然会解析样式，应用给这个元素。
                 bind(el, color) {
-                    el.style.color = binding.value;
+                    el.style.color = color.value;
                 }
             },
             'font-weight': function(el, binding2) {
@@ -888,7 +888,7 @@ vm中接收一个directives对象。
   ![](./images/lifecycle.png)
 
 - - **创建期间的声明周期函数：**
-  - beforeCreate:Vue实例刚刚被创建出来，此时，还没有初始化data和methods属性；
+  - beforeCreate：Vue实例刚刚被创建出来，此时，还没有初始化data和methods属性；
   - created：实例已经在内存中创建OK，此时data和methods已经创建OK，此时还没有开始编译模板；
   - 模板编译期：把Vue中的指令进行执行，最终在内存中生成一个编译好的最终模板字符串，然后把这个模板字符串渲染为内存中的DOM，此时，只是在内存中渲染好了模板，并没有挂载到页面上；
   - beforeMount：此时已经完成了模板的编译，但是还没有挂载到页面中；
@@ -941,13 +941,13 @@ jquery提供了ajax请求的简写方式，vue-resource是vue生态的异步请�
                    },
                    postInfo() {
                        this.$http.post('http://vue.studyit.io/api/post',{},{emulateJson: true}).then(result => { //发起post请求
+                           //手动发起的 Post 请求，默认没有表单格式，所以，有的服务器处理不了
+                           //通过 post 方法的第三个参数， { emulateJSON: true } 设置 提交的内容类型 为 普通表单数据格式
                            console.log(result.body)
                        })
                    },
                    jsonpInfo(){
                        this.$http.json('http://vue.studyit.io/api/jsonp').then(result => { //发起jsonp请求 application/x-wwww-form-urlencoded
-                           //手动发起的 Post 请求，默认没有表单格式，所以，有的服务器处理不了
-                           //通过 post 方法的第三个参数， { emulateJSON: true } 设置 提交的内容类型 为 普通表单数据格式
                            console.log(result.body)
                        })
                    }
