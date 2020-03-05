@@ -46,7 +46,7 @@ tar命令
 >
 > 安装命令
 >
-> `yum -y install docker-ce`
+> `yum -y install docker`
 >
 > -y表示不询问安装，直接安装成功
 >
@@ -314,17 +314,22 @@ dockerfile是由一系列命令和参数构成的脚本，这些命令应用于�
 2. 对于测试人员：可以直接拿开发时所构建的镜像或者通过Dockerfile文件构建一个新的镜像开始工作；
 3. 对于运维人员：在部署时，可以实现应用的无缝移植。
 
+> 用Dockerfile构建镜像是一条标准路径，容器启动后可以自动执行Dockerfile中的命令。
+
 ## 4.1 常用命令
+
+[Dockerfile知识](https://www.cnblogs.com/edisonchou/p/dockerfile_inside_introduction.html)
 
 | 命令                               | 作用                                                         |
 | ---------------------------------- | ------------------------------------------------------------ |
 | FROM image_name:tag                | 定义了使用那个基础镜像启动构建流程（不存在会先下载）         |
 | MAINTAINER user_name               | 生命镜像的创建者                                             |
 | ENV key value                      | 设置环境变量（可以写多条）                                   |
-| RUN command                        | 时Dockerfile的核心部分（可以写多条）（创建目录或者拷贝文件等） |
+| RUN command                        | 是Dockerfile的核心部分（可以写多条）（创建目录或者拷贝文件等） |
 | ADD source_dir/file dest_dir/file  | 将宿主机的文件复制到容器内，如果是一个压缩文件，将会在复制后自动解压 |
 | COPY source_dir/file dest_dir/file | 和ADD相似，如果有解压文件并不能解压                          |
 | WORKDIR path_dir                   | 设置工作目录（当前命令是在这个工作目录执行）                 |
+| CMD                                | 容器启动时执行的脚本                                         |
 
 ## 4.2 Dockerfile构建jdk1.8镜像
 
