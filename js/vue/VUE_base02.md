@@ -1661,3 +1661,88 @@ computed:
 1. computed属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算，主要当做属性来用；
 2. methods方法表示一个具体的操作，主要书写业务逻辑；
 3. watch一个对象，键是需要观察的表达式，值是对应的回调函数。主要用来监听某些特定数据的变化，从而进行某些具体的业务逻辑操作；可以看做是computed和methods的结合体；
+
+
+
+# 14、Vue进阶介绍
+
+vue2.x和react一样使用虚拟DOM（Virture DOM）技术，Virture DOM并不是整整意义上的DOM，而是一个轻量级的js对象，在状态发生变化时，Virture DOM会进行Diff运算，来更新只需要被替换的DOM，而不是重绘。
+
+Virture DOM是通过一个VNode类进行表达的，每个DOM元素或组件都对应一个VNode对象，
+
+## Render函数
+
+[Render函数详解](https://www.cnblogs.com/yubin-/p/11543734.html)
+
+正常情况下编写一个组件，在<template>标签中编写组件结构。
+
+而render函数可以通过js的形式创建组件对象，render函数通过createElement函数创建Virture DOM。如下:
+
+通过template形式创建组件
+
+```html
+<div id="app">
+    <ele></ele>
+</div>
+<script>
+	Vue.component('ele',{
+        template:'\
+				<div id="element"\
+				 :class="{show:show}" \
+        		 @click="handleClick">文本内容</div>',
+        data: function(){
+			return {
+                show:true
+            }        
+    	},
+    	methods:{
+            handleClick:function(){
+                console.log('click!');
+            }
+        }
+    })
+</script>
+```
+
+使用render函数形式：
+
+```html
+<div id="app">
+    <ele></ele>
+</div>
+<script>
+    Vue.component('ele',{
+        render:function(createElement){
+            return createElement(
+           		'div',
+                {
+                    //动态绑定class,同:class
+                    class:{
+                        'show':this.show
+                    },
+                    //普通html特性
+                    attrs:{
+                        id:'element'
+                    },
+                    //给div绑定click事件
+                    on: {
+                        click: this.handleClick
+                    }
+                },
+                '文本内容'
+            )
+        }，
+        data: function(){
+			return {
+                show:true
+            }        
+    	},
+    	methods:{
+            handleClick:function(){
+                console.log('click!');
+            }
+        }
+    })
+</script>
+```
+
